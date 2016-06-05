@@ -104,9 +104,17 @@ object CS143Utils {
    * @param expressions
    * @return
    */
-  def getUdfFromExpressions(expressions: Seq[Expression]): ScalaUdf = {
-    // IMPLEMENT ME
-    null
+  def getUdfFromExpressions(expressions: Seq[Expression]): ScalaUdf = 
+  {
+  	var result: ScalaUdf = null
+  
+   	for (i <- expressions.reverse)
+   	{
+   		if(i.isInstanceOf[ScalaUdf] )
+   			result = i.asInstanceOf[ScalaUdf]
+   	}
+   
+    result
   }
 
   /**
@@ -186,16 +194,60 @@ object CachingIteratorGenerator {
         val preUdfProjection = CS143Utils.getNewProjection(preUdfExpressions, inputSchema)
         val postUdfProjection = CS143Utils.getNewProjection(postUdfExpressions, inputSchema)
         val cache: JavaHashMap[Row, Row] = new JavaHashMap[Row, Row]()
+    	var result: Boolean = false
 
-        def hasNext() = {
+        def hasNext() = 
+        {
           // IMPLEMENT ME
-          false
+		 input.hasNext     
+         
         }
 
-        def next() = {
-          // IMPLEMENT ME
-          null
+        def next() = 
+        {
+        // IMPLEMENT ME
+         var start = input.next
+		 var result:Row = cache.get(cacheKeyProjection(start))
+		 
+         if(!input.hasNext && result != null)
+         {
+         	result
+         }else
+         {
+         	
+         	var arrList: JavaArrayList[Any] = new JavaArrayList()
+         
+         	
+         	preUdfProjection(start).foreach 
+			{ (i: Any) => 
+				{
+				  arrList.add(i)
+				}
+			}
+			udfProject(start).iterator.foreach 
+            { (i: Any) => 
+				{
+				  arrList.add(i)
+				}
+            }
+			postUdfProjection(start).iterator.foreach 
+			{ (i: Any) => 
+				{
+				  arrList.add(i)
+				}
+			}
+			
+			result = Row.fromSeq(arrList.toArray)
+			
+			cache.put(cacheKeyProjection(start),result)
+
+			result
+         	
+         }
+        
         }
+        
+        
       }
     }
   }

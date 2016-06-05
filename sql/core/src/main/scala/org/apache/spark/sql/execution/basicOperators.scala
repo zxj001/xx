@@ -94,32 +94,65 @@ case class PartitionProject(projectList: Seq[Expression], child: SparkPlan) exte
    * @param input the input iterator
    * @return the result of applying the projection
    */
-  def generateIterator(input: Iterator[Row]): Iterator[Row] = {
+def generateIterator(input: Iterator[Row]): Iterator[Row] = {
     // This is the key generator for the course-grained external hashing.
     val keyGenerator = CS143Utils.getNewProjection(projectList, child.output)
-
-    // IMPLEMENT ME
+    
+    val partitionIterator = DiskHashedRelation(input, keyGenerator).getIterator()
+    var current: Iterator[Row] = null
+    var partitions: DiskPartition = null
+    var cachingGenerator: (Iterator[Row] => Iterator[Row]) = null
 
     new Iterator[Row] {
-      def hasNext() = {
-        // IMPLEMENT ME
-        false
+    
+      def hasNext() = 
+      {
+        var hasNext = false
+        
+        if(current != null && current.hasNext)
+        {
+          	hasNext = true
+        }else
+        {
+          	hasNext = fetchNextPartition
+        }
+        
+        hasNext
       }
+      
+      def next() = 
+      {
+        var nextValue: Row = null
 
-      def next() = {
-        // IMPLEMENT ME
-        null
+        if (hasNext) 
+        {
+          	nextValue = current.next()
+        } 
+        
+        nextValue 
       }
-
       /**
        * This fetches the next partition over which we will iterate or returns false if there are no more partitions
        * over which we can iterate.
        *
        * @return
        */
-      private def fetchNextPartition(): Boolean  = {
-        // IMPLEMENT ME
-        false
+      private def fetchNextPartition(): Boolean = 
+      {
+      	var result: Boolean = false
+        while (partitionIterator.hasNext && !result) 
+        {
+          partitions = partitionIterator.next()
+          cachingGenerator = CS143Utils.generateCachingIterator(projectList, child.output)
+          current = cachingGenerator(partitions.getData())
+          
+          if (current.hasNext) 
+          {
+            result = true
+          }
+          
+        }
+        result
       }
     }
   }
