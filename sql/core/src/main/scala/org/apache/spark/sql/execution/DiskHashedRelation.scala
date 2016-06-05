@@ -36,12 +36,17 @@ protected [sql] final class GeneralDiskHashedRelation(partitions: Array[DiskPart
     extends DiskHashedRelation with Serializable {
 
   override def getIterator() = {
-    // IMPLEMENT ME
-    null
+    // IMPLEMENT ME, IN PROGRESS
+    // return an iterator of our partitions
+    partitions.iterator
+    //null
   }
 
   override def closeAllPartitions() = {
-    // IMPLEMENT ME
+    // IMPLEMENT ME, IN PROGRESS
+    for (partition <- getIterator()) {
+      partition.closeInput() 
+    }
   }
 }
 
@@ -63,7 +68,17 @@ private[sql] class DiskPartition (
    * @param row the [[Row]] we are adding
    */
   def insert(row: Row) = {
-    // IMPLEMENT ME
+    // IMPLEMENT ME, IN PROGRESS
+    if (inputClosed) {
+      throw new SparkException("Should not be writing to file after closing input. Bad things will happen!")
+    }
+    // get the current size of our data
+    data.add(row);
+    val curSize = measurePartitionSize()
+    // if the final size of the data is too big, spill the partition onto disk then insert the row
+    if (curSize > blockSize) {
+      spillPartitionToDisk()
+    }
   }
 
   /**
@@ -106,13 +121,15 @@ private[sql] class DiskPartition (
       var byteArray: Array[Byte] = null
 
       override def next() = {
-        // IMPLEMENT ME
-        null
+        // IMPLEMENT ME, IN PROGRESS
+        currentIterator.next()
+        //null
       }
 
       override def hasNext() = {
-        // IMPLEMENT ME
-        false
+        // IMPLEMENT ME, IN PROGRESS
+        currentIterator.hasNext
+        //false
       }
 
       /**
@@ -122,8 +139,15 @@ private[sql] class DiskPartition (
        * @return true unless the iterator is empty.
        */
       private[this] def fetchNextChunk(): Boolean = {
-        // IMPLEMENT ME
-        false
+        // IMPLEMENT ME, IN PROGRESS
+        if (chunkSizeIterator.isEmpty) {
+          false
+        } else {
+          if (chunkSizeIterator.hasNext) { 
+            chunkSizeIterator.next()
+          }
+          true
+        }
       }
     }
   }
@@ -136,7 +160,11 @@ private[sql] class DiskPartition (
    * also be closed.
    */
   def closeInput() = {
-    // IMPLEMENT ME
+    // IMPLEMENT ME, IN PROGRESS
+    if (!writtenToDisk)
+      spillPartitionToDisk()
+    closePartition()
+    outStream.close()
     inputClosed = true
   }
 
@@ -173,7 +201,25 @@ private[sql] object DiskHashedRelation {
                 keyGenerator: Projection,
                 size: Int = 64,
                 blockSize: Int = 64000) = {
-    // IMPLEMENT ME
-    null
+    // IMPLEMENT ME, IN PROGRESS
+    
+    // create parititions and hashRelation
+    val partitions : Array[DiskPartition] = new Array[DiskPartition] (size)
+    val hashRelation : GeneralDiskHashedRelation = new GeneralDiskHashedRelation(partitions)
+    
+    // initialize all of our parititions
+    val increment = 0
+    for (increment <- 0 until size) {
+      partitions(increment) = new DiskPartition(increment.toString, blockSize)
+    }
+    
+    // insert our rows into the partitions by hashcode
+    for (row <- input) {
+      val code = keyGenerator.apply(row).hashCode() % size
+      partitions(code).insert(row)
+    }
+    hashRelation.closeAllPartitions()
+    hashRelation
+    
   }
 }

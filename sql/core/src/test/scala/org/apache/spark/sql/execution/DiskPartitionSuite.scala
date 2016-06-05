@@ -23,14 +23,17 @@ class DiskPartitionSuite extends FunSuite {
   test ("close input") {
     val partition: DiskPartition = new DiskPartition("close input test", 1)
 
+    println("created disk partition")
     intercept[SparkException] {
       partition.getData()
     }
-
+    println("got partition data, intercepted")
     partition.closeInput()
+    println("closed partition input")
 
     intercept[SparkException] {
       partition.insert(Row(1))
     }
+    println("inserting row into partition, intercepted")
   }
 }

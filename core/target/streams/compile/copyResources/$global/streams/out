@@ -1,0 +1,17 @@
+[0m[[0mdebug[0m] [0mCopy resource mappings: [0m
+[0m[[0mdebug[0m] [0m	(/home/jason/xx/core/src/main/resources/org,/home/jason/xx/core/target/scala-2.10/classes/org)[0m
+[0m[[0mdebug[0m] [0m	(/home/jason/xx/core/src/main/resources/org/apache,/home/jason/xx/core/target/scala-2.10/classes/org/apache)[0m
+[0m[[0mdebug[0m] [0m	(/home/jason/xx/core/src/main/resources/org/apache/spark,/home/jason/xx/core/target/scala-2.10/classes/org/apache/spark)[0m
+[0m[[0mdebug[0m] [0m	(/home/jason/xx/core/src/main/resources/org/apache/spark/log4j-defaults.properties,/home/jason/xx/core/target/scala-2.10/classes/org/apache/spark/log4j-defaults.properties)[0m
+[0m[[0mdebug[0m] [0m	(/home/jason/xx/core/src/main/resources/org/apache/spark/ui,/home/jason/xx/core/target/scala-2.10/classes/org/apache/spark/ui)[0m
+[0m[[0mdebug[0m] [0m	(/home/jason/xx/core/src/main/resources/org/apache/spark/ui/static,/home/jason/xx/core/target/scala-2.10/classes/org/apache/spark/ui/static)[0m
+[0m[[0mdebug[0m] [0m	(/home/jason/xx/core/src/main/resources/org/apache/spark/ui/static/spark-logo-77x50px-hd.png,/home/jason/xx/core/target/scala-2.10/classes/org/apache/spark/ui/static/spark-logo-77x50px-hd.png)[0m
+[0m[[0mdebug[0m] [0m	(/home/jason/xx/core/src/main/resources/org/apache/spark/ui/static/spark_logo.png,/home/jason/xx/core/target/scala-2.10/classes/org/apache/spark/ui/static/spark_logo.png)[0m
+[0m[[0mdebug[0m] [0m	(/home/jason/xx/core/src/main/resources/org/apache/spark/ui/static/initialize-tooltips.js,/home/jason/xx/core/target/scala-2.10/classes/org/apache/spark/ui/static/initialize-tooltips.js)[0m
+[0m[[0mdebug[0m] [0m	(/home/jason/xx/core/src/main/resources/org/apache/spark/ui/static/sorttable.js,/home/jason/xx/core/target/scala-2.10/classes/org/apache/spark/ui/static/sorttable.js)[0m
+[0m[[0mdebug[0m] [0m	(/home/jason/xx/core/src/main/resources/org/apache/spark/ui/static/webui.css,/home/jason/xx/core/target/scala-2.10/classes/org/apache/spark/ui/static/webui.css)[0m
+[0m[[0mdebug[0m] [0m	(/home/jason/xx/core/src/main/resources/org/apache/spark/ui/static/jquery-1.11.1.min.js,/home/jason/xx/core/target/scala-2.10/classes/org/apache/spark/ui/static/jquery-1.11.1.min.js)[0m
+[0m[[0mdebug[0m] [0m	(/home/jason/xx/core/src/main/resources/org/apache/spark/ui/static/bootstrap.min.css,/home/jason/xx/core/target/scala-2.10/classes/org/apache/spark/ui/static/bootstrap.min.css)[0m
+[0m[[0mdebug[0m] [0m	(/home/jason/xx/core/src/main/resources/org/apache/spark/ui/static/table.js,/home/jason/xx/core/target/scala-2.10/classes/org/apache/spark/ui/static/table.js)[0m
+[0m[[0mdebug[0m] [0m	(/home/jason/xx/core/src/main/resources/org/apache/spark/ui/static/additional-metrics.js,/home/jason/xx/core/target/scala-2.10/classes/org/apache/spark/ui/static/additional-metrics.js)[0m
+[0m[[0mdebug[0m] [0m	(/home/jason/xx/core/src/main/resources/org/apache/spark/ui/static/bootstrap-tooltip.js,/home/jason/xx/core/target/scala-2.10/classes/org/apache/spark/ui/static/bootstrap-tooltip.js)[0m

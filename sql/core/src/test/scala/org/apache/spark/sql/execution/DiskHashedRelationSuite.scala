@@ -13,10 +13,12 @@ class DiskHashedRelationSuite extends FunSuite {
 
   // TESTS FOR TASK #2
   test("values are in correct partition") {
+    println("creating diskhashedrelation")  
     val data: Array[Row] = (0 to 100).map(i => Row(i)).toArray
     val hashedRelation: DiskHashedRelation = DiskHashedRelation(data.iterator, keyGenerator, 3, 64000)
     var count: Int = 0
-
+    
+    println("iterating over each partition")
     for (partition <- hashedRelation.getIterator()) {
       for (row <- partition.getData()) {
         assert(row.hashCode() % 3 == count)
