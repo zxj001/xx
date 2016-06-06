@@ -127,7 +127,11 @@ private[sql] class DiskPartition (
         }
         else {
           currentIterator = CS143Utils.getListFromBytes(byteArray).iterator.asScala
-          currentIterator.next()
+          if (currentIterator.hasNext) {
+            currentIterator.next()
+          } else {
+            null
+          }
         }
         //null
       }
