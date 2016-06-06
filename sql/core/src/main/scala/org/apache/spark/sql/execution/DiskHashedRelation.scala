@@ -45,7 +45,7 @@ protected [sql] final class GeneralDiskHashedRelation(partitions: Array[DiskPart
   override def closeAllPartitions() = {
     // IMPLEMENT ME, IN PROGRESS
     for (partition <- getIterator()) {
-      partition.closeInput() 
+      partition.closePartition() 
     }
   }
 }
@@ -122,7 +122,13 @@ private[sql] class DiskPartition (
 
       override def next() = {
         // IMPLEMENT ME, IN PROGRESS
-        currentIterator.next()
+        if (currentIterator.hasNext) {
+          currentIterator.next()
+        }
+        else {
+          currentIterator = CS143Utils.getListFromBytes(byteArray).iterator.asScala
+          currentIterator.next()
+        }
         //null
       }
 
@@ -144,7 +150,7 @@ private[sql] class DiskPartition (
           false
         } else {
           if (chunkSizeIterator.hasNext) { 
-            chunkSizeIterator.next()
+            byteArray = CS143Utils.getNextChunkBytes(inStream, chunkSizeIterator.next(), byteArray)
           }
           true
         }
@@ -163,7 +169,6 @@ private[sql] class DiskPartition (
     // IMPLEMENT ME, IN PROGRESS
     if (!writtenToDisk)
       spillPartitionToDisk()
-    closePartition()
     outStream.close()
     inputClosed = true
   }
@@ -218,8 +223,9 @@ private[sql] object DiskHashedRelation {
       val code = keyGenerator.apply(row).hashCode() % size
       partitions(code).insert(row)
     }
-    hashRelation.closeAllPartitions()
+    for (partition <- hashRelation.getIterator()) {
+      partition.closeInput()
+    }
     hashRelation
-    
   }
 }
